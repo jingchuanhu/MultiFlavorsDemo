@@ -1,0 +1,97 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.testmultimodule'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.testmultimodule"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+        flavorDimensions "versionCode"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        rk3588 {
+//            storeFile file('E:\\签名文件\\BC2000\\minrray_bc2000.jks')
+            storeFile file('./zijingcloud.jks')
+            keyAlias 'zijing'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+
+    productFlavors {
+        demo {
+            applicationIdSuffix ".demo"
+            versionNameSuffix "-demo"
+            buildConfigField "String", "TERMINAL", '"demo"'
+        }
+
+        full {
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+            buildConfigField "String", "TERMINAL", '"full"'
+        }
+
+//        minApi24 {
+//            dimension "api"
+//            minSdk 24
+//            versionCode 30000 + android.defaultConfig.versionCode
+//            versionNameSuffix "-minApi24"
+//            buildConfigField "String", "API_TERMINAL", '"api24"'
+//        }
+//
+//        minApi23 {
+//            dimension "api"
+//            minSdk 24
+//            versionCode 20000 + android.defaultConfig.versionCode
+//            versionNameSuffix "-minApi23"
+//            buildConfigField "String", "API_TERMINAL", '"api23"'
+//        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            productFlavors.demo.signingConfig signingConfigs.rk3588
+            productFlavors.full.signingConfig signingConfigs.rk3588
+
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            productFlavors.demo.signingConfig signingConfigs.rk3588
+            productFlavors.full.signingConfig signingConfigs.rk3588
+
+            debuggable true
+        }
+    }
+
+//    flavorDimensions "api", "mode"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    fullImplementation project(':lib24full')
+    demoImplementation project(':lib23demo')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+}
